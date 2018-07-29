@@ -30,9 +30,10 @@ function my_book_include_assets(){
     wp_enqueue_script("jquery");
     wp_enqueue_script("bootstrap.min.js", MY_BOOK_PLUGIN_URL."/assets/js/bootstrap.min.js","", true);
     wp_enqueue_script("validation.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.validate.min.js","", true);
-    wp_enqueue_script("datatable.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.dataTables.min.js","", true);
+   
     wp_enqueue_script("jquery.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.min.js","", true);
     wp_enqueue_script("jquery.notifyBar.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.notifyBar.js","", true);
+    wp_enqueue_script("datatable.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.dataTables.min.js","", true);
     wp_enqueue_script("script.js", MY_BOOK_PLUGIN_URL."/assets/js/script.js","", true);
     wp_localize_script("script.js","mybookajaxurl",admin_url("admin-ajax.php"));
 }
@@ -43,6 +44,7 @@ function my_book_plugin_menus(){
     add_menu_page("My Book","My Book","manage_options","book-list","my_book_list","dashicons-book-alt",30);
     add_submenu_page("book-list","Book List","Book List","manage_options","book-list","my_book_list");
     add_submenu_page("book-list","Add New","Add New","manage_options","add-new","my_book_add");
+    add_submenu_page("book-list","","","manage_options","book-edit","my_book_edit");
 }
 add_action("admin_menu","my_book_plugin_menus");
 
@@ -52,6 +54,9 @@ function my_book_list() {
 
 function my_book_add() {
     include_once MY_BOOK_PLUGIN_DIR_PATH."/views/book-add.php";
+}
+function my_book_edit() {
+    include_once MY_BOOK_PLUGIN_DIR_PATH."/views/book-edit.php";
 }
 
 
@@ -77,4 +82,15 @@ function my_book_generates_table_script() {
     dbDelta($sql);
     
 }
+
 register_activation_hook(__FILE__,"my_book_generates_table_script");
+
+function drop_table_plugin_books() {
+   global $wpdb;
+   $wpdb->query("DROP TABLE IF EXISTS " .my_book_table());
+}
+
+register_deactivation_hook(__FILE__, "drop_table_plugin_books");
+//Rrgister_uninstall_hook(__FILE__,"drop_table_plugin_books");
+
+?>
