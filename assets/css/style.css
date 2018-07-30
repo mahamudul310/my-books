@@ -1,0 +1,3 @@
+#frmAddBook label.error, #fromEditBook label.error{
+	color: red;
+}

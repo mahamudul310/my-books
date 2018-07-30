@@ -28,14 +28,13 @@ function my_book_include_assets(){
     
     //Scripts
     wp_enqueue_script("jquery");
-    wp_enqueue_script("bootstrap.min.js", MY_BOOK_PLUGIN_URL."/assets/js/bootstrap.min.js","", true);
-    wp_enqueue_script("validation.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.validate.min.js","", true);
-   
-    wp_enqueue_script("jquery.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.min.js","", true);
-    wp_enqueue_script("jquery.notifyBar.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.notifyBar.js","", true);
-    wp_enqueue_script("datatable.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.dataTables.min.js","", true);
-    wp_enqueue_script("script.js", MY_BOOK_PLUGIN_URL."/assets/js/script.js","", true);
-    wp_localize_script("script.js","mybookajaxurl",admin_url("admin-ajax.php"));
+    wp_enqueue_script("bootstrap.min.js", MY_BOOK_PLUGIN_URL."/assets/js/bootstrap.min.js","", false );
+    wp_enqueue_script("validation.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.validate.min.js","", false );
+    wp_enqueue_script("datatable.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.dataTables.min.js","", false );
+    //wp_enqueue_script("jquery.min.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.min.js","", true);
+    wp_enqueue_script("jquery.notifyBar.js", MY_BOOK_PLUGIN_URL."/assets/js/jquery.notifyBar.js","", false );
+    wp_enqueue_script("script.js", MY_BOOK_PLUGIN_URL."/assets/js/script.js","", true );
+    wp_localize_script("script.js","mybookajaxurl", admin_url("admin-ajax.php"));
 }
 
 add_action("init","my_book_include_assets");
@@ -92,5 +91,21 @@ function drop_table_plugin_books() {
 
 register_deactivation_hook(__FILE__, "drop_table_plugin_books");
 //Rrgister_uninstall_hook(__FILE__,"drop_table_plugin_books");
+
+add_action("wp_ajax_mybooklibrary","my_book_ajax_handler");
+function my_book_ajax_handler(){
+
+    global $wpdb;
+    if($_REQUEST['param']=="save_book"){
+        $wpdb->insert('wp_my_books',array(
+            "name"=>$_REQUEST['name'],
+            "author"=>$_REQUEST['author'],
+            "about"=>$_REQUEST['about'],
+            "book_image"=>$_REQUEST['image']
+        ));
+        echo json_encode(array("status" =>1 , "message"=>"book created successfully"));
+    }
+    wp_die();
+}
 
 ?>
