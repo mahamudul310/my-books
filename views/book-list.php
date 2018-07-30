@@ -41,7 +41,7 @@
                           <td><img src="<?php echo $value['book_image']; ?>" style="height:80px; width:80px;" ></td>
                           <td><?php echo $value['created_at']; ?></td>
                           <td>
-                            <a class="btn btn-info btn-xs" href="javascript:void(0)">Edit</a>
+                            <a class="btn btn-info btn-xs" href="admin.php?page=book-edit&edit=<?php echo $value['id']; ?>">Edit</a>
                             <a class="btn btn-danger btn-xs" href="javascript:void(0)">Delete</a>
                           </td>
                       </tr>
